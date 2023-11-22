@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <Funcoes_eSports.h>
+
 typedef struct data{
     int dia;
     int mes;
@@ -23,10 +25,12 @@ typedef struct equipamento{
 typedef struct jogador{
     char nome[80];
     DATA dataNascimento;
-    float cpf;
+    char cpf[15];
     GENERO genero;
     ESTADO estadoCivil;
-    char nickname[15];
+    char equipeProfissional[50];
+    char patrocionadoraPrincipal[80];
+    char nickname[30];
     float seguidores;
     EQUIPAMENTO setup;
     PONTOS pontos;
