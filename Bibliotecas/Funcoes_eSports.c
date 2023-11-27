@@ -106,26 +106,28 @@ void adicionarJogador(){
     return;
 };
 void inserirPontuacao(JOGADOR jogadores[], int n){
+    FILE *file;
+    file= fopen("jogadores.dat","ab+");
     if(n=0){
-        fseek(file, 0*sizeof(JOGADORES), SEEK_END);
+        fseek(file, 0*sizeof(JOGADOR), SEEK_END);
         fflush(stdin);
         printf("Quantas partidas ganhas tem o jogador?\n");
-        scanf("%d", &jogadores[i].pontos.vitorias);
+        scanf("%d", &jogadores.pontos.vitorias);
         printf("Quantas partidas empatadas tem o jogador?\n");
-        scanf("%d", &jogadores[i].pontos.empates);
+        scanf("%d", &jogadores.pontos.empates);
         printf("Quantas partidas perdidas tem o jogador?\n");
-        scanf("%d", &jogadores[i].pontos.derrotas);
-        jogadores[i].pontos.pontuacao= (jogadores[i].pontos.vitorias*3)+jogadores[i].pontos.empates;
+        scanf("%d", &jogadores.pontos.derrotas);
+        jogadores.pontos.pontuacao= (jogadores.pontos.vitorias*3)+jogadores.pontos.empates;
     }else{
-        fseek(file, n*sizeof(JOGADORES), SEEK_SET);
+        fseek(file, n*sizeof(JOGADOR), SEEK_SET);
         fflush(stdin);
         printf("Quantas partidas ganhas tem o jogador?\n");
-        scanf("%d", &jogadores[i].pontos.vitorias);
+        scanf("%d", &jogadores.pontos.vitorias);
         printf("Quantas partidas empatadas tem o jogador?\n");
-        scanf("%d", &jogadores[i].pontos.empates);
+        scanf("%d", &jogadores.pontos.empates);
         printf("Quantas partidas perdidas tem o jogador?\n");
-        scanf("%d", &jogadores[i].pontos.derrotas);
-        jogadores[i].pontos.pontuacao= (jogadores[i].pontos.vitorias*3)+jogadores[i].pontos.empates;
+        scanf("%d", &jogadores.pontos.derrotas);
+        jogadores.pontos.pontuacao= (jogadores.pontos.vitorias*3)+jogadores.pontos.empates;
     }
 
 
@@ -137,16 +139,43 @@ void exibirJogador(JOGADOR jogadores[], int i){
 void ordenarJogador(){
 
 }
-void procurarJogador(){
-
+int procurarJogadorNome(jogador){
+    FILE *file;
+    file= fopen("jogadores.dat","ab+");
+    int controle=100;
+    for(int i=0; i<; i++){
+        fseek(file, i*sizeof(JOGADOR), SEEK_SET);
+        for (int j; j<80; j++){
+            if(jogador[j]!=jogadores.nome[j]){
+                controle=100;
+                break;
+            }else{
+                controle=i;
+            }
+        }
+        
+    }
+    return(controle);
 }
 void alterarInfos(){
-    printf("Uhmm, ok! Vamos lá. Qual informação você gostaria de alterar?\n");
+    FILE *file;
+    file= fopen("jogadores.dat","ab+");
+    printf("Uhmm, ok! Vamos lá. Qual jogador você gostaria de alterar?\n");
     int n=1000;
     char jogador[80];
-    printf("1- Nome;\n2- Data de nascimento;\n3- CPF;\n4- Gênero;\n5- Estado civil;\n6- Time;\n7- Patrocinador principal;\n8- Nickname;\n9- Seguidores;\n10- Setup;\n11- Pontuação;\n12- Títulos;\n13- Posição no ranking;\n14- Sair;\n");
-    scanf("%d", &n);
+    fflush(stdin);
+    gets(jogador, stdin);
+    int joga= procurarJogadorNome(jogador)
+    
     do{
+        if(controle=100){
+            printf("Esse jogador não existe!!\nTente novamente!!\n");
+            n=14;
+        }else{
+            printf("Qual informação você gostaria de alterar?")
+            printf("1- Nome;\n2- Data de nascimento;\n3- CPF;\n4- Gênero;\n5- Estado civil;\n6- Time;\n7- Patrocinador principal;\n8- Nickname;\n9- Seguidores;\n10- Setup;\n11- Pontuação;\n12- Títulos;\n13- Posição no ranking;\n14- Sair;\n");
+            scanf("%d", &n);
+        }
         switch(n){
             case 1:
             case 2:
@@ -161,10 +190,15 @@ void alterarInfos(){
             case 11: inserirPontuacao(jogadores, n);
             case 12: 
             case 13:
-            case 14: printf("OK! De qual jogador você deseja alterar as informações agora?");
-
-            case 15: printf("Espero ter te ajudado com o que pude!")
-            default: printf("Você não escolheu uma opção válida!!\nTente novamente!!")
+            case 14: if(controle=100){
+                    printf("Qual jogador você gostaria de alterar?\n");
+                }else{
+                    printf("OK! De qual jogador você deseja alterar as informações agora?");
+                }
+                fflush(stdin);
+                gets(jogador, stdin);
+            case 15: printf("Espero ter te ajudado com o que pude!");
+            default: printf("Você não escolheu uma opção válida!!\nTente novamente!!");
         }
     }while(n!=15);
 }
