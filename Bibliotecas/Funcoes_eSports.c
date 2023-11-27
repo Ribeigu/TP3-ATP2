@@ -48,6 +48,7 @@ void adicionarJogador(){
     printf("Quantos jogadores você quer adicionar?\n");
     scanf("%d", &n);            
     JOGADOR jogadores[n];
+    int controle;
     for(int i=0; i<n; i++){
         fflush(stdin);
         printf("Digite o nome do jogador:\n");
@@ -59,11 +60,47 @@ void adicionarJogador(){
         printf("Digite o cpf no formato xxx.xxx.xxx-xx:\n");
         gets(jogadores[i].cpf);
         fflush(stdin);
-        // printf("Insira o gênero:\n(masculino,feminino, outro)\n");
-        // scanf("%d", &jogadores[i].genero);
-        // printf("Insira seu estado civil:\n(solteiro=1, casado, separado, divorciado, viúvo)\n");
-        // scanf("%d", &jogadores[i].estadoCivil);
-        // fflush(stdin);
+        printf("Insira o gênero:\n(1- masculino,2- feminino, 3-outro)\n");
+        scanf("%d", &controle);
+        switch (controle)
+        {
+        case 1:
+            jogadores[i].genero=masculino;
+            break;
+        case 2:
+            jogadores[i].genero=feminino;
+            break;
+        case 3:
+            jogadores[i].genero=outro;
+            break;    
+        default:
+            printf("Gênero não atualizado.\n");
+            break;
+        }
+        printf("Insira seu estado civil:\n(solteiro=1, casado, separado, divorciado, viúvo)\n");
+        scanf("%d", &controle);
+        switch (controle)
+        {
+        case 1:
+            jogadores[i].estadoCivil=solteiro;
+            break;
+        case 2:
+            jogadores[i].estadoCivil=casado;
+            break;
+        case 3:
+            jogadores[i].estadoCivil=separado;
+            break; 
+        case 4:
+            jogadores[i].estadoCivil=divorciado;
+            break; 
+        case 5:
+            jogadores[i].estadoCivil=viúvo;
+            break;    
+        default:
+            printf("Estado civil não atualizado.\n");
+            break;
+        }
+        fflush(stdin);
         printf("Qual seu maior patrocinador?\n");
         gets(jogadores[i].patrocinador);
         fflush(stdin);
@@ -139,13 +176,13 @@ void exibirJogador(JOGADOR jogadores[], int i){
 void ordenarJogador(){
 
 }
-int procurarJogadorNome(jogador){
+int procurarJogadorNome(char jogador[]){
     FILE *file;
     file= fopen("jogadores.dat","ab+");
     int controle=100;
     for(int i=0; i<; i++){
         fseek(file, i*sizeof(JOGADOR), SEEK_SET);
-        for (int j; j<80; j++){
+        for (int j=0; j<80; j++){
             if(jogador[j]!=jogadores.nome[j]){
                 controle=100;
                 break;
@@ -164,15 +201,15 @@ void alterarInfos(){
     int n=1000;
     char jogador[80];
     fflush(stdin);
-    gets(jogador, stdin);
-    int joga= procurarJogadorNome(jogador)
+    gets(jogador);
+    int joga= procurarJogadorNome(jogador);
     
     do{
-        if(controle=100){
+        if(joga=100){
             printf("Esse jogador não existe!!\nTente novamente!!\n");
             n=14;
         }else{
-            printf("Qual informação você gostaria de alterar?")
+            printf("Qual informação você gostaria de alterar?");
             printf("1- Nome;\n2- Data de nascimento;\n3- CPF;\n4- Gênero;\n5- Estado civil;\n6- Time;\n7- Patrocinador principal;\n8- Nickname;\n9- Seguidores;\n10- Setup;\n11- Pontuação;\n12- Títulos;\n13- Posição no ranking;\n14- Sair;\n");
             scanf("%d", &n);
         }
@@ -190,13 +227,13 @@ void alterarInfos(){
             case 11: inserirPontuacao(jogadores, n);
             case 12: 
             case 13:
-            case 14: if(controle=100){
+            case 14: if(joga=100){
                     printf("Qual jogador você gostaria de alterar?\n");
                 }else{
                     printf("OK! De qual jogador você deseja alterar as informações agora?");
                 }
                 fflush(stdin);
-                gets(jogador, stdin);
+                gets(jogador);
             case 15: printf("Espero ter te ajudado com o que pude!");
             default: printf("Você não escolheu uma opção válida!!\nTente novamente!!");
         }
