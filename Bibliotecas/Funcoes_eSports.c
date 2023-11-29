@@ -1,8 +1,10 @@
 //Aqui estão todas as funções utilizadas durante o projeto
 #include<stdio.h>
+#include<string.h>
 #include<locale.h>
 
 //              Structs auxiliares
+
 typedef struct data{
     int dia;
     int mes;
@@ -142,6 +144,14 @@ void adicionarJogador(){
         scanf("%d",&jogadores[i].setup.memoriaRAM);
         fflush(stdin);
         printf("\n");
+        printf("Quantas partidas ganhas tem o jogador?\n");
+        scanf("%d", &jogadores[i].pontos.vitorias);
+        printf("Quantas partidas empatadas tem o jogador?\n");
+        scanf("%d", &jogadores[i].pontos.empates);
+        printf("Quantas partidas perdidas tem o jogador?\n");
+        scanf("%d", &jogadores[i].pontos.derrotas);
+        jogadores[i].pontos.pontuacao= (jogadores[i].pontos.vitorias*3)+jogadores[i].pontos.empates;
+        printf("\n");
         printf("\nAgora vamos para as informações da equipe!!\n");
         printf("Qual o nome da equipe?\n");
         gets(jogadores[i].team.nome);
@@ -155,6 +165,7 @@ void adicionarJogador(){
     return;
 };
 
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //                                         Alterações importantes
@@ -164,17 +175,6 @@ void adicionarJogador(){
 void inserirPontuacao(JOGADOR jogadores[], int n){
     FILE *file;
     file= fopen("jogadores.dat","ab+");
-    if(n==0){ //precisa fazer o n virar o numero do ultimo jogador. n sei fazer isso não (Ribeigu)
-        fseek(file, 0*sizeof(JOGADOR), SEEK_END);
-        fflush(stdin);
-        printf("Quantas partidas ganhas tem o jogador?\n");
-        scanf("%d", &jogadores[n].pontos.vitorias);
-        printf("Quantas partidas empatadas tem o jogador?\n");
-        scanf("%d", &jogadores[n].pontos.empates);
-        printf("Quantas partidas perdidas tem o jogador?\n");
-        scanf("%d", &jogadores[n].pontos.derrotas);
-        jogadores[n].pontos.pontuacao= (jogadores[n].pontos.vitorias*3)+jogadores[n].pontos.empates;
-    }else{
         fseek(file, n*sizeof(JOGADOR), SEEK_SET);
         fflush(stdin);
         printf("Quantas partidas ganhas tem o jogador?\n");
@@ -184,7 +184,6 @@ void inserirPontuacao(JOGADOR jogadores[], int n){
         printf("Quantas partidas perdidas tem o jogador?\n");
         scanf("%d", &jogadores[n].pontos.derrotas);
         jogadores[n].pontos.pontuacao= (jogadores[n].pontos.vitorias*3)+jogadores[n].pontos.empates;
-    }
     return;
 
 
@@ -204,24 +203,25 @@ void ordenarJogador(){
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int procurarJogadorNome(char jogador[], JOGADOR jogadores[], int n){
+int procurarJogadorNome(char jogador[], JOGADOR jogadores[]){
     // n tbm precisa ser o ultimo numero de jogadores aqui. não faço ideia de como faça  isso. (Ribeigu)
+
+    //Minha solução foi colocar um numero alto e fazer um for enquanto i for maior ou igual a 0
     FILE *file;
     file= fopen("jogadores.dat","ab+");
-    int controle=100;
-    for(int i=0; i<=n; i++){
+    int controle, n;
+    for(int i=100; i>=0; i--){
         fseek(file, i*sizeof(JOGADOR), SEEK_SET);
-        for (int j=0; j<80; j++){
-            if(jogador[j]!=jogadores[i].nome[j]){
-                controle=100;
-                break;
-            }else{
-                controle=i;
-            }
+        controle= strcmp(jogadores[i].nome, jogador);
+        n=i;
+        if(controle=0){
+            break;
+        }else{
+            n=100;
         }
-        
+
     }
-    return(controle);
+    return(n);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -240,7 +240,7 @@ void alterarInfos(){
     char jogador[80], simOuNao;
     fflush(stdin);
     gets(jogador);
-    int joga= procurarJogadorNome(jogador, jogadores, m);
+    int joga= procurarJogadorNome(jogador, jogadores);
     
     do{
         if(joga=100){
@@ -252,14 +252,14 @@ void alterarInfos(){
             scanf("%d", &n);
         }
         switch(n){
-            case 1: pritnf("O nome atual do jogador é: %s.\n", jogadores[n].nome);//nome
+            case 1: pritnf("O nome atual do jogador é: %s.\n", jogadores[m].nome);//nome
                     do{
                     printf("Tem certeza que deseja mudar?\n(S- sim, N- não)\n");
                     gets(simOuNao);
                     fflsuh(stdin);
                         if(simOuNao==83 || simOuNao==115){
                             printf("Escreva o novo nome abaixo, por favor!\n");
-                            gets(jogadores[n].nome);
+                            gets(jogadores[m].nome);
                             fflush(stdin);
                             printf("Prontinho!!\n");
                             simOuNao=0;
@@ -272,14 +272,14 @@ void alterarInfos(){
                             printf("Escolha uma opção válida!!\n\n");
                         }
                     }while(simOuNao!=0);
-            case 2:printf("A data atual de nascimento é: %d/%d/%d.\n", jogadores[n].dataNascimento.dia, jogadores[n].dataNascimento.mes, jogadores[n].dataNascimento.ano);//nascimento
+            case 2:printf("A data atual de nascimento é: %d/%d/%d.\n", jogadores[m].dataNascimento.dia, jogadores[m].dataNascimento.mes, jogadores[m].dataNascimento.ano);//nascimento
                     do{
                         printf("Tem certeza que deseja mudar?\n(S- sim, N- não)\n");
                         gets(simOuNao);
                         fflsuh(stdin);
                         if(simOuNao==83 || simOuNao==115){
                             printf("Digite o dia de nascimento dela no formato dd mm aaaa:\n");
-                            scanf("%d%d%d", &jogadores[n].dataNascimento.dia, &jogadores[n].dataNascimento.mes, &jogadores[n].dataNascimento.ano);
+                            scanf("%d%d%d", &jogadores[m].dataNascimento.dia, &jogadores[m].dataNascimento.mes, &jogadores[m].dataNascimento.ano);
                             fflush(stdin);
                             printf("Prontinho!!\n");
                             simOuNao=0;
@@ -292,14 +292,14 @@ void alterarInfos(){
                             printf("Escolha uma opção válida!!\n\n");
                         }
                     }while(simOuNao!=0); 
-            case 3:printf("O cpf atual é: %s.\n", jogadores[n].cpf);//cpf
+            case 3:printf("O cpf atual é: %s.\n", jogadores[m].cpf);//cpf
                     do{
                         printf("Tem certeza que deseja mudar?\n(S- sim, N- não)\n");
                         gets(simOuNao);
                         fflsuh(stdin);
                         if(simOuNao==83 || simOuNao==115){
                             printf("Digite o cpf no formato xxx.xxx.xxx-xx:\n");
-                            gets(jogadores[n].cpf);
+                            gets(jogadores[m].cpf);
                             fflush(stdin);
                             printf("Prontinho!!\n");
                             simOuNao=0;
@@ -312,7 +312,7 @@ void alterarInfos(){
                             printf("Escolha uma opção válida!!\n\n");
                         }
                     }while(simOuNao!=0);
-            case 4:printf("O gênero atual é: %s.\n", jogadores[n].genero);//gênero
+            case 4:printf("O gênero atual é: %s.\n", jogadores[m].genero);//gênero
                     do{
                         printf("Tem certeza que deseja mudar?\n(S- sim, N- não)\n");
                         gets(simOuNao);
@@ -324,13 +324,13 @@ void alterarInfos(){
                         switch (controle)
                         {
                         case 1:
-                            jogadores[n].genero=masculino;
+                            jogadores[m].genero=masculino;
                             break;
                         case 2:
-                            jogadores[n].genero=feminino;
+                            jogadores[m].genero=feminino;
                             break;
                         case 3:
-                            jogadores[n].genero=outro;
+                            jogadores[m].genero=outro;
                             break;    
                         default:
                             printf("Gênero não atualizado.\n");
@@ -348,7 +348,7 @@ void alterarInfos(){
                             printf("Escolha uma opção válida!!\n\n");
                         }
                     }while(simOuNao!=0);
-            case 5:printf("O estado civil atual é: %s.\n", jogadores[n].estadoCivil);//estado civil
+            case 5:printf("O estado civil atual é: %s.\n", jogadores[m].estadoCivil);//estado civil
                     do{
                         printf("Tem certeza que deseja mudar?\n(S- sim, N- não)\n");
                         gets(simOuNao);
@@ -360,19 +360,19 @@ void alterarInfos(){
                         switch (controle)
                         {
                         case 1:
-                            jogadores[n].estadoCivil=solteiro;
+                            jogadores[m].estadoCivil=solteiro;
                             break;
                         case 2:
-                            jogadores[n].estadoCivil=casado;
+                            jogadores[m].estadoCivil=casado;
                             break;
                         case 3:
-                            jogadores[n].estadoCivil=separado;
+                            jogadores[m].estadoCivil=separado;
                             break; 
                         case 4:
-                            jogadores[n].estadoCivil=divorciado;
+                            jogadores[m].estadoCivil=divorciado;
                             break; 
                         case 5:
-                            jogadores[n].estadoCivil=viúvo;
+                            jogadores[m].estadoCivil=viúvo;
                             break;    
                         default:
                             printf("Estado civil não atualizado.\n");
@@ -390,7 +390,7 @@ void alterarInfos(){
                             printf("Escolha uma opção válida!!\n\n");
                         }
                     }while(simOuNao!=0);
-            case 6:printf("O time atual é: %s.\n", jogadores[n].team.nome);//time
+            case 6:printf("O time atual é: %s.\n", jogadores[m].team.nome);//time
                     do{
                         printf("Tem certeza que deseja mudar?\n(S- sim, N- não)\n");
                         gets(simOuNao);
@@ -409,14 +409,14 @@ void alterarInfos(){
                             printf("Escolha uma opção válida!!\n\n");
                         }
                     }while(simOuNao!=0);
-            case 7:printf("O maior patrocinador atualmente é: %s.\n", jogadores[n].patrocinador);//patrocinador
+            case 7:printf("O maior patrocinador atualmente é: %s.\n", jogadores[m].patrocinador);//patrocinador
                     do{
                         printf("Tem certeza que deseja mudar?\n(S- sim, N- não)\n");
                         gets(simOuNao);
                         fflsuh(stdin);
                         if(simOuNao==83 || simOuNao==115){
                             printf("Qual o maior patrocinador atual?\n");
-                            gets(jogadores[n].patrocinador);
+                            gets(jogadores[m].patrocinador);
                             fflush(stdin);
                             printf("Prontinho!!\n");
                             simOuNao=0;
@@ -429,14 +429,14 @@ void alterarInfos(){
                             printf("Escolha uma opção válida!!\n\n");
                         }
                     }while(simOuNao!=0);
-            case 8:printf("O nickname atual é: %s.\n", jogadores[n].nickname);//nickname
+            case 8:printf("O nickname atual é: %s.\n", jogadores[m].nickname);//nickname
                     do{
                         printf("Tem certeza que deseja mudar?\n(S- sim, N- não)\n");
                         gets(simOuNao);
                         fflsuh(stdin);
                         if(simOuNao==83 || simOuNao==115){
                             printf("Qual é o seu nickname?\n");
-                            gets(jogadores[n].nickname);
+                            gets(jogadores[m].nickname);
                             fflush(stdin);
                             printf("Prontinho!!\n");
                             simOuNao=0;
@@ -449,14 +449,14 @@ void alterarInfos(){
                             printf("Escolha uma opção válida!!\n\n");
                         }
                     }while(simOuNao!=0);
-            case 9:printf("A quantidade atual de seguidores é: %d.\n", jogadores[n].seguidores);//seguidores
+            case 9:printf("A quantidade atual de seguidores é: %d.\n", jogadores[m].seguidores);//seguidores
                     do{
                         printf("Tem certeza que deseja mudar?\n(S- sim, N- não)\n");
                         gets(simOuNao);
                         fflsuh(stdin);
                         if(simOuNao==83 || simOuNao==115){
                             printf("Quantos seguidores tem nas redes sociais?\n");
-                            scanf("%d", &jogadores[n].seguidores);
+                            scanf("%d", &jogadores[m].seguidores);
                             fflush(stdin);
                             printf("Prontinho!!\n");
                             simOuNao=0;
@@ -488,7 +488,7 @@ void alterarInfos(){
                             printf("Escolha uma opção válida!!\n\n");
                         }
                     }while(simOuNao!=0);
-            case 11:printf("A pontuação atual é %d.\n", jogadores[n].pontos.pontuacao);//pontuação
+            case 11:printf("A pontuação atual é %d.\n", jogadores[m].pontos.pontuacao);//pontuação
                         do{
                         printf("Tem certeza que deseja mudar?\n(S- sim, N- não)\n");
                         gets(simOuNao);
@@ -507,15 +507,15 @@ void alterarInfos(){
                             printf("Escolha uma opção válida!!\n\n");
                         }
                     }while(simOuNao!=0); 
-                    inserirPontuacao(jogadores, n);
-            case 12: printf("A quantidade atual de títulos é %d.\n", jogadores[n].titulos);//titulos
+                    inserirPontuacao(jogadores, m);
+            case 12: printf("A quantidade atual de títulos é %d.\n", jogadores[m].titulos);//titulos
                     do{
                         printf("Tem certeza que deseja mudar?\n(S- sim, N- não)\n");
                         gets(simOuNao);
                         fflsuh(stdin);
                         if(simOuNao==83 || simOuNao==115){
                             printf("O jogador possuí quantos títulos?\n");
-                            scanf("%d", &jogadores[n].titulos);
+                            scanf("%d", &jogadores[m].titulos);
                             fflush(stdin);
                             printf("Prontinho!!\n");
                             simOuNao=0;
@@ -528,14 +528,14 @@ void alterarInfos(){
                             printf("Escolha uma opção válida!!\n\n");
                         }
                     }while(simOuNao!=0);
-            case 13: printf("A posição atual é:%d.\n", jogadores[n].posicao);//posição no ranking
+            case 13: printf("A posição atual é:%d.\n", jogadores[m].posicao);//posição no ranking
                     do{
                         printf("Tem certeza que deseja mudar?\n(S- sim, N- não)\n");
                         gets(simOuNao);
                         fflsuh(stdin);
                         if(simOuNao==83 || simOuNao==115){
                             printf("Qual a sua posição no ranking global?\n");
-                            scanf("%d", &jogadores[n].posicao);
+                            scanf("%d", &jogadores[m].posicao);
                             fflush(stdin);
                             fflush(stdin);
                             printf("Prontinho!!\n");
