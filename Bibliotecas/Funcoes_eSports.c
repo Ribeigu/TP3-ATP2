@@ -199,7 +199,32 @@ void exibirJogador(JOGADOR jogadores[], int i){
     printf("Informações do jogador:\n");
     printf("Nome: %s\n", jogadores[i].nome);
     printf("Data de nascimento: %d/%d/%d\n",jogadores[i].dataNascimento.dia, jogadores[i].dataNascimento.mes, jogadores[i].dataNascimento.ano);
+    printf("CPF: %s\n", jogadores[i].cpf);
+    printf("Genero: %d\n", jogadores[i].genero);
+    printf("Estado civil: %d\n", jogadores[i].estadoCivil);
+    printf("Informações do time: ");
+    printf("Nome: %s\n", jogadores[i].team.nome);
+    printf("Nickname: %s\n", jogadores[i].team.nick);
+    printf("Seguidores: %d\n", jogadores[i].team.seguidores);
+    printf("-----------------------------\n");
+    printf("Seguidores do jogador: %d\n", jogadores[i].seguidores);
+    printf("Patrocinador: %s\n", jogadores[i].patrocinador);
+    printf("Nickname: %s\n", jogadores[i].nickname);
+    printf("Numero de titulos: %d\n", jogadores[i].titulos);
+    printf("Posição no ranking global: %d\n", jogadores[i].posicao);
+    printf("Numero de vitorias: %d\n", jogadores[i].pontos.vitorias);
+    printf("Numero de empates: %d\n", jogadores[i].pontos.empates);
+    printf("Numero de derrotas: %d\n", jogadores[i].pontos.derrotas);
+    printf("Pontuação geral: %d\n", jogadores[i].pontos.pontuacao);
+    printf("Agora sobre o setup:\n");
+    printf("Computador: %s\n", jogadores[i].setup.computador);
+    printf("Memória RAM: %s\n", jogadores[i].setup.memoriaRAM);
+    printf("Placa: %s\n", jogadores[i].setup.placa);
+    printf("Processador: %s\n", jogadores[i].setup.processador);
+
+
 }
+
 void ordenarNome(){
     FILE *file;
     file= fopen("jogadores.dat","ab+");
@@ -346,8 +371,37 @@ void ordenarPontuacao(int operacao, int valor){
     }
 }
 
+int procurarJogadorNome(char jogador[], JOGADOR jogadores[]){
+    // n tbm precisa ser o ultimo numero de jogadores aqui. não faço ideia de como faça  isso. (Ribeigu)
+
+    //Minha solução foi colocar um numero alto e fazer um for enquanto i for maior ou igual a 0
+    FILE *file;
+    file= fopen("jogadores.dat","ab+");
+    int controle, n;
+    fseek(file, 0*sizeof(JOGADOR),SEEK_END);
+    int tamanho=ftell(file)/sizeof(JOGADOR);
+    for(int i=0; i<tamanho; i++){
+        fseek(file, i*sizeof(JOGADOR), SEEK_SET);
+        controle= strcmp(jogadores[i].nome, jogador);
+        n=i;
+        if(controle=0){
+            break;
+        }else{
+            n=100;
+        }
+
+    }
+    return(n);
+}
+
 void ordenarJogador(int parametro){
-    int controle();
+    int controle, posicao;
+    char joga[80];
+    FILE *file;
+    file= fopen("jogadores.dat","ab+");
+    fseek(file, 0*sizeof(JOGADOR),SEEK_END);
+    int tamanho=ftell(file)/sizeof(JOGADOR);
+    JOGADOR jogadores[tamanho];
     switch (parametro)
     {
     case 1:
@@ -369,6 +423,12 @@ void ordenarJogador(int parametro){
         scanf("%d", &controle);
         ordenarPontuacao(2, controle);
         break;
+    case 6:
+        printf("\nQual jogador você deseja procurar?\n");
+        gets(joga);
+        posicao= procurarJogadorNome(joga, jogadores);
+        exibirJogadores(jogadores, posicao);
+
     default:
         break;
     }
@@ -382,37 +442,17 @@ void ordenarJogador(int parametro){
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int procurarJogadorNome(char jogador[], JOGADOR jogadores[]){
-    // n tbm precisa ser o ultimo numero de jogadores aqui. não faço ideia de como faça  isso. (Ribeigu)
 
-    //Minha solução foi colocar um numero alto e fazer um for enquanto i for maior ou igual a 0
-    FILE *file;
-    file= fopen("jogadores.dat","ab+");
-    int controle, n;
-    for(int i=100; i>=0; i--){
-        fseek(file, i*sizeof(JOGADOR), SEEK_SET);
-        controle= strcmp(jogadores[i].nome, jogador);
-        n=i;
-        if(controle=0){
-            break;
-        }else{
-            n=100;
-        }
-
-    }
-    return(n);
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //                                         Alterações importantes
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void alterarInfos(){
     FILE *file;
     file= fopen("jogadores.dat","ab+");
-    fseek(file, sizeof(JOGADOR), SEEK_END);
+    fseek(file, 0*sizeof(JOGADOR), SEEK_END);
     
     int tamanho=ftell(file)/sizeof(JOGADOR); //mesmo problema das 2 acimas
     JOGADOR jogadores[tamanho];
@@ -741,4 +781,8 @@ void alterarInfos(){
             default: printf("Você não escolheu uma opção válida!!\nTente novamente!!");
         }
     }while(n!=15);
+}
+
+void listarDados(int i){
+
 }

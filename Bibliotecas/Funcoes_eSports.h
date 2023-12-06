@@ -3,7 +3,8 @@
 #define Funcoes_eSports_
 
 void adicionarJogador();
-
+void editarJogadores();
+void ordenarJogador(int parametro);
 
 
 #include "Funcoes_eSports.c"
