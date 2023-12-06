@@ -164,6 +164,9 @@ void adicionarJogador(){
     }
     FILE *file;
     file = fopen("jogadores.dat", "ab+");
+    if(file == NULL){
+        printf("O arwuivo não abriu");
+    }
     fwrite(&jogadores, sizeof(JOGADOR),n,file);
     return;
 };
@@ -293,7 +296,7 @@ void ordenarVitorias(){
     
 }
 
-void ordenarPontuaca(int operacao, int valor){
+void ordenarPontuacao(int operacao, int valor){
     FILE *file;
     file= fopen("jogadores.dat","ab+");
     int tamanho, controle[tamanho], posicao, aux;
